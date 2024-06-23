@@ -22,10 +22,11 @@ export class Bot {
 
         this.client.on("warn", (info) => console.log(info));
         this.client.on("error", console.error);
+
+        this.onInteractionCreate();
     }
 
     private async registerSlashCommands() {
-        // await this.client.application?.commands.set([]);
         const rest = new REST({ version: "10" }).setToken(config.TOKEN);
         
         const commandFiles = readdirSync(join(__dirname, "..", "commands")).filter(file => file.endsWith(".ts"));
@@ -37,9 +38,15 @@ export class Bot {
             this.slashCommandsMap.set(command.default.data.name, command.default);
         }
     
-        await rest.put(
-            Routes.applicationCommands(this.client.user!.id), {body: this.slashCommands }
-        )
+        try {
+            console.log("Registering slash commands...");
+            await rest.put(
+                Routes.applicationCommands(this.client.user!.id), { body: this.slashCommands }
+            );
+            console.log("Slash commands registered!");
+        } catch(error: any) {
+            console.error(error);
+        }
     }
 
     private async onInteractionCreate() {
