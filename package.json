@@ -1,0 +1,21 @@
+{
+  "name": "revelbot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node ."
+  },
+  "keywords": [],
+  "author": "xyugen",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/voice": "^0.17.0",
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.2"
+  }
+}
