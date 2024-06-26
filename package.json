@@ -15,7 +15,8 @@
     "dotenv": "^16.4.5",
     "play-dl": "^1.9.7",
     "ts-node": "^10.9.2",
-    "youtube-sr": "^4.3.11"
+    "youtube-sr": "^4.3.11",
+    "ytdl-core": "^4.11.5"
   },
   "devDependencies": {
     "typescript": "^5.5.2"
