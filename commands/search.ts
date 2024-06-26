@@ -1,5 +1,6 @@
-import { ActionRowBuilder, ChatInputCommandInteraction, EmbedBuilder, PermissionsBitField, SlashCommandBuilder, StringSelectMenuBuilder } from "discord.js";
+import { ActionRowBuilder, ChatInputCommandInteraction, EmbedBuilder, PermissionsBitField, SlashCommandBuilder, StringSelectMenuBuilder, StringSelectMenuInteraction } from "discord.js";
 import YouTube, { Video } from "youtube-sr";
+import { bot } from "..";
 
 export default {
     data: new SlashCommandBuilder()
@@ -17,7 +18,7 @@ export default {
         const member = interaction.guild!.members.cache.get(interaction.user.id);
 
         if (!member?.voice.channel) 
-            interaction.editReply({ content: "You must be in a voice channel to use this command." }).catch(console.error);
+            return interaction.reply({ content: "You must be in a voice channel to use this command." }).catch(console.error);
 
         const search = query;
 
@@ -67,11 +68,16 @@ export default {
                 time: 30000,
             })
             .then((selectInteraction) => {
-                if (!(selectInteraction instanceof StringSelectMenuBuilder)) return;
+                if (!(selectInteraction instanceof StringSelectMenuInteraction)) return;
 
                 selectInteraction.update({ content: "⏳ Loading the selected songs...", components: [] });
 
                 // TODO: Make the bot play the selected song
+                bot.slashCommandsMap
+                    .get("play")!
+                    .execute(interaction, selectInteraction.values[0])
+
+                selectInteraction.deleteReply().catch(console.error);
             })
             .catch(console.error);
     }

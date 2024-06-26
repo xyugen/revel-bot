@@ -22,7 +22,6 @@ export class Song {
 
     public static async from(url: string = "", search: string = "") {
         const isYoutubeUrl : boolean = videoPattern.test(url);
-        // if (!isYoutubeUrl) 
 
         let songInfo: InfoData;
 
@@ -35,7 +34,6 @@ export class Song {
                 duration: songInfo.video_details.durationInSec
             });
         } else {
-            // TODO: Implement search
             const result = await YouTube.searchOne(search, "video");
 
             result ? null : console.log(`No results found for ${search}`);
