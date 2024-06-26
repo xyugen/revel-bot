@@ -21,7 +21,7 @@ export default {
         const { channel } = guildMember!.voice;
 
         if (!channel)
-            return interaction.reply({ content: "You need to be in a voice channel to use this command." });
+            return interaction.editReply({ content: "You need to be in a voice channel to use this command." });
         
         // TODO: Add support for playlists
         // const queue = bot.queues.get(interaction.guildId!);

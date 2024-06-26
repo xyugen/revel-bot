@@ -36,9 +36,14 @@ export default {
         try {
             const metadata = await fetchVideoMetadata(argSongName);
 
-            await interaction.reply(
-                `⏳ Downloading ${metadata.title} - ${metadata.author} (${metadata.timestamp})...`
-            );
+            if (interaction.replied)
+                await interaction.editReply(
+                    `⏳ Downloading ${metadata.title} - ${metadata.author} (${metadata.timestamp})...`
+                );
+            else
+                await interaction.reply(
+                    `⏳ Downloading ${metadata.title} - ${metadata.author} (${metadata.timestamp})...`
+                );
 
             const buffer = await downloadAudio(argSongName);
             const attachment = new AttachmentBuilder(buffer).setName(
