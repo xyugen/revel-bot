@@ -5,14 +5,7 @@ import {
 } from "discord.js";
 import ytdl from "ytdl-core";
 import { formatTimestamp } from "../utils/helper";
-
-interface VideoMetadata {
-    url: string;
-    title: string;
-    durationInSec: number;
-    author: string;
-    timestamp: string;
-}
+import { YouTubeMetadata } from "../interfaces/YouTubeMetadata";
 
 export default {
     data: new SlashCommandBuilder()
@@ -65,7 +58,7 @@ export default {
     },
 };
 
-async function fetchVideoMetadata(url: string): Promise<VideoMetadata> {
+async function fetchVideoMetadata(url: string): Promise<YouTubeMetadata> {
     const info = await ytdl.getBasicInfo(url);
 
     const videoDetails = info.videoDetails;
