@@ -23,11 +23,12 @@ export default {
             return;
         }
 
+        await interaction.deferReply();
         const shortUrl = await shortenUrl(url);
         const embed = new EmbedBuilder()
             .setTitle(`Shortened URL: ${shortUrl}`)
             .setColor(0xFF0000);
 
-        await interaction.reply({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
     }
 }
