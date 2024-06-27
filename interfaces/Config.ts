@@ -1,4 +1,5 @@
 export interface Config {
     TOKEN: string
-    PORT: number   
+    PORT: number 
+    RAPID_API_KEY: string  
 }
