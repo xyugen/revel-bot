@@ -23,6 +23,7 @@ export default {
             return;
         }
 
+        await interaction.deferReply();
         const shortUrl = await shortenUrl(url);
         const embed = new EmbedBuilder()
             .setTitle(`Shortened URL: ${shortUrl}`)
