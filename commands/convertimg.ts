@@ -4,8 +4,8 @@ import sharp, { FormatEnum } from "sharp";
 
 // Available formats and format mappings
 const formatMappings: { [key: string]: keyof FormatEnum } = {
-    png: 'jpeg',
-    webp: 'jpeg',
+    png: 'jpg',
+    webp: 'jpg',
     jpg: 'png',
     jpeg: 'png'
 }
@@ -37,19 +37,20 @@ export default {
         }
 
         try {
+            await interaction.deferReply();
             const imageBuffer = await fetchImageBuffer(image.url);
             const formatType: keyof FormatEnum = formatTo as keyof FormatEnum;
             const buffer = await sharp(imageBuffer).toFormat(formatType).toBuffer();
 
             const attachment = new AttachmentBuilder(buffer).setName(`${imageName}.${formatTo}`);
 
-            await interaction.reply({
+            await interaction.followUp({
                 content: `✅ Converted ${formatFrom.toUpperCase()} to ${formatTo.toUpperCase()}.`,
                 files: [attachment]
             });
         } catch (error) {
             console.error(error);
-            await interaction.reply({ content: "Failed to convert image", ephemeral: true });
+            await interaction.followUp({ content: "Failed to convert image", ephemeral: true });
         }
     }
 }
