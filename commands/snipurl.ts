@@ -17,13 +17,13 @@ export default {
     cooldown: 3,
     async execute(interaction: ChatInputCommandInteraction) {
         const url = interaction.options.getString('url', true);
-        
+
+        await interaction.deferReply();
         if (!url.match(isURL)) {
             await interaction.reply('Invalid URL');
             return;
         }
 
-        await interaction.deferReply();
         const shortUrl = await shortenUrl(url);
         const embed = new EmbedBuilder()
             .setTitle(`Shortened URL: ${shortUrl}`)
