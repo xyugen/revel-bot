@@ -48,7 +48,7 @@ export default {
         }
 
         // If there are no results
-        if (!results || !results) {
+        if (!results) {
             interaction.editReply({ content: "No results found." }).catch(console.error);
             return;
         }
@@ -66,7 +66,7 @@ export default {
                 .setCustomId("search-select")
                 .setPlaceholder("Nothing selected")
                 .setMinValues(1)
-                .setMaxValues(10)
+                .setMaxValues(1)
                 .addOptions(options)
         )
 

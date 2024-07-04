@@ -1,7 +1,7 @@
 import axios from "axios";
 import config from "../utils/config";
 
-const shortenUrl = async (url: string): Promise<string> => {
+const shortenUrl = async (url: string, duration: number = 7): Promise<string> => {
     const options = {
         method: 'POST',
         url: 'https://url-shortener42.p.rapidapi.com/shorten/',
@@ -13,7 +13,7 @@ const shortenUrl = async (url: string): Promise<string> => {
         },
         data: {
             url: url,
-            validity_duration: 7
+            validity_duration: duration
         }
     }
 
