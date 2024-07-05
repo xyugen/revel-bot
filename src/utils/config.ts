@@ -5,7 +5,8 @@ import { Config } from "../interfaces/Config";
 let config: Config = {
     TOKEN: process.env.TOKEN!,
     PORT: process.env.PORT ? parseInt(process.env.PORT) : 3000,
-    RAPID_API_KEY: process.env.RAPID_API_KEY!
+    RAPID_API_KEY: process.env.RAPID_API_KEY!,
+    GROQ_API_KEY: process.env.GROQ_API_KEY!,
 }
 
 export default config

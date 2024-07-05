@@ -14,6 +14,7 @@
     "axios": "^1.7.2",
     "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
+    "groq-sdk": "^0.5.0",
     "instagram-url-direct": "^1.0.16",
     "pdf-to-img": "^3.0.0",
     "play-dl": "^1.9.7",
