@@ -3,7 +3,6 @@ import instagramGetUrl from "instagram-url-direct";
 import { igPattern } from "../utils/patterns";
 import { File } from "../structs/File";
 import shortenUrl from "../services/urlShortener";
-import { FileMetadata } from "../interfaces/FileMetadata";
 
 interface IGData {
     results_number: number;
@@ -55,7 +54,7 @@ const execute = async (interaction: ChatInputCommandInteraction, input: string) 
  * @param {string} link - The URL of the media file to download.
  * @return {Promise<void>} A promise that resolves when the download and reply are complete.
  */
-const downloadSingleMedia = async (interaction: ChatInputCommandInteraction, link: string) => {
+const downloadSingleMedia = async (interaction: ChatInputCommandInteraction, link: string): Promise<void> => {
     const file = await File.getFileMetadata(link);
     if (file) {
         const attachment = new AttachmentBuilder(file.url)
@@ -76,7 +75,7 @@ const downloadSingleMedia = async (interaction: ChatInputCommandInteraction, lin
  * @param {string[]} urlList - An array of URLs for the media to download.
  * @return {Promise<void>} A promise that resolves when the options are presented.
  */
-const presentOptions = async (interaction: ChatInputCommandInteraction, urlList: string[]) => {
+const presentOptions = async (interaction: ChatInputCommandInteraction, urlList: string[]): Promise<void> => {
     const optionPromises = urlList.map(async (link, index) => ({
         label: `Media ${index + 1}`,
         value: await shortenUrl(link)
