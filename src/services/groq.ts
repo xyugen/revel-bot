@@ -3,6 +3,7 @@ import config from "../utils/config";
 import { ChatCompletion, ChatCompletionMessageParam } from "groq-sdk/resources/chat/completions";
 
 const groq = new Groq({ apiKey: config.GROQ_API_KEY });
+const messageHistories: Record<string, string> = {};
 
 const getGroqChatCompletion = async (query: string, username: string = ""): Promise<ChatCompletion> => {
     const systemPrompt: ChatCompletionMessageParam = {

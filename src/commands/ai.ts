@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import getGroqChatCompletion from "../services/groq";
 import { ChatCompletion } from "groq-sdk/resources/chat/completions";
 
@@ -17,10 +17,28 @@ export default {
         const query = interaction.options.getString("query") ?? "";
         const user = interaction.user.username;
 
-        interaction.reply("⏳ Generating response...");
+        interaction.deferReply();
         const chatCompletion: ChatCompletion = await getGroqChatCompletion(query, user);
         const chatContent = chatCompletion.choices[0].message.content || "";
 
-        interaction.editReply({ content: chatContent });
+        const bot = interaction.client.user!;
+        const avatar = bot.displayAvatarURL();
+        const embed = new EmbedBuilder()
+            .setColor('#d16c1f')
+            .setAuthor({ name: 'Revel AI Bot', iconURL: avatar, url: 'https://github.com/xyugen/revel-bot' })
+            .addFields(
+                {
+                    name: "Question",
+                    value: query,
+                    inline: false
+                },
+                {
+                    name: "Response",
+                    value: chatContent,
+                    inline: false
+                }
+            )
+
+        await interaction.editReply({ embeds: [embed] });
     }
 }
