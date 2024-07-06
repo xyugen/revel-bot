@@ -1,6 +1,5 @@
-import { ChatInputCommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import getGroqChatCompletion from "../services/groq";
-import { ChatCompletion } from "groq-sdk/resources/chat/completions";
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import { withMessageHistory } from "../services/groq";
 
 export default {
     data: new SlashCommandBuilder()
@@ -14,31 +13,30 @@ export default {
     permissions: [],
     cooldown: 3,
     execute: async (interaction: ChatInputCommandInteraction, input: string) => {
-        const query = interaction.options.getString("query") ?? "";
-        const user = interaction.user.username;
+        try {
+            const query = interaction.options.getString("query") ?? "";
+            const user = interaction.user.username;
 
-        interaction.deferReply();
-        const chatCompletion: ChatCompletion = await getGroqChatCompletion(query, user);
-        const chatContent = chatCompletion.choices[0].message.content || "";
-
-        const bot = interaction.client.user!;
-        const avatar = bot.displayAvatarURL();
-        const embed = new EmbedBuilder()
-            .setColor('#d16c1f')
-            .setAuthor({ name: 'Revel AI Bot', iconURL: avatar, url: 'https://github.com/xyugen/revel-bot' })
-            .addFields(
-                {
-                    name: "Question",
-                    value: query,
-                    inline: false
-                },
-                {
-                    name: "Response",
-                    value: chatContent,
-                    inline: false
+            const config = {
+                configurable: {
+                    sessionId: interaction.guildId || interaction.user.id,
                 }
-            )
+            }
 
-        await interaction.editReply({ embeds: [embed] });
+            interaction.deferReply();
+            const chatCompletion = await withMessageHistory.invoke(
+                {
+                    username: user,
+                    input: query,
+                },
+                config
+            );
+            const chatContent = chatCompletion || "Sorry, I don't have an answer for that.";
+
+            await interaction.editReply({ content: chatContent });
+        } catch (error) {
+            console.error(error);
+            await interaction.editReply("An error occurred while processing your request.");
+        }
     }
 }

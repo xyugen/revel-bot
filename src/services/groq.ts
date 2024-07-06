@@ -1,32 +1,41 @@
-import Groq from "groq-sdk";
 import config from "../utils/config";
-import { ChatCompletion, ChatCompletionMessageParam } from "groq-sdk/resources/chat/completions";
+import { ChatGroq } from "@langchain/groq";
+import { InMemoryChatMessageHistory } from "@langchain/core/chat_history";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { RunnableWithMessageHistory } from "@langchain/core/runnables";
+import { StringOutputParser } from "@langchain/core/output_parsers";
 
-const groq = new Groq({ apiKey: config.GROQ_API_KEY });
-const messageHistories: Record<string, string> = {};
+const model = new ChatGroq({
+    apiKey: config.GROQ_API_KEY,
+    model: "llama3-8b-8192",
+    temperature: 0.6,
+    maxTokens: 1000,
+});
 
-const getGroqChatCompletion = async (query: string, username: string = ""): Promise<ChatCompletion> => {
-    const systemPrompt: ChatCompletionMessageParam = {
-        role: "system",
-        content: "Your name is Revel, and you are a helpful assistant in a BSIT Discord server called IT Dark Room. You reply with very short answers."
-    }
+const messageHistories: Record<string, InMemoryChatMessageHistory> = {};
 
-    const result: ChatCompletion = await groq.chat.completions.create({
-        messages: [
-            systemPrompt,
-            {
-                name: username,
-                role: "user",
-                content: query
-            }
-        ],
-        model: "llama3-8b-8192",
-        temperature: 0.5,
-        max_tokens: 1024,
-        stream: false
-    })
+const prompt = ChatPromptTemplate.fromMessages([
+    [
+        "system",
+        "You are Revel, and you are a helpful assistant in a BSIT Discord server called IT Dark Room. You reply with very short answers."
+    ],
+    ["placeholder", "{chat_history}"],
+    ["user", "{username}: {input}"],
+])
 
-    return result;
-}
+const chain = prompt.pipe(model).pipe(new StringOutputParser());
 
-export default getGroqChatCompletion;
+const withMessageHistory = new RunnableWithMessageHistory({
+    runnable: chain,
+    getMessageHistory: async (sessiondId: string) => {
+        if (messageHistories[sessiondId] === undefined) {
+            messageHistories[sessiondId] = new InMemoryChatMessageHistory();
+        }
+
+        return messageHistories[sessiondId]
+    },
+    inputMessagesKey: "input",
+    historyMessagesKey: "chat_history",
+})
+
+export { withMessageHistory };
