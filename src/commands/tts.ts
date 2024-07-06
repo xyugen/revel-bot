@@ -55,7 +55,7 @@ export default {
             }
 
             let replacedContent = message.content;
-            if (message.channelId === channel.id) {
+            if (message.channelId === channel!.id) {
                 for (const user of message.mentions.users.values()) {
                     replacedContent = replaceIdToName(message.content, user);
                 }
