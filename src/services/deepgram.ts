@@ -1,15 +1,16 @@
 import { createClient } from "@deepgram/sdk";
 import config from "../utils/config";
+import { Readable } from 'stream';
 
 const deepgram = createClient(config.DEEPGRAM_API_KEY);
 
-const getAudio = async (text: string) => {
+const getAudio = async (text: string): Promise<Readable> => {
     const response = await deepgram.speak.request(
         {text},
         {
             model: "aura-helios-en",
-            encoding: "linear16",
-            container: "wav"
+            encoding: "opus", // "linear16"
+            container: "ogg" // "wav"
         }
     );
 
@@ -19,13 +20,9 @@ const getAudio = async (text: string) => {
         console.log("Headers: ", headers);
     }
 
-    if (stream) {
-        const buffer = await getAudioBuffer(stream);
-        
-        return buffer;
-    } else {
-        console.error("Error generating audio: ", stream);
-    }
+    const readable = getAudioReadable(stream!);
+
+    return readable!;
 }
 
 const getAudioBuffer = async (response: ReadableStream) => {
@@ -45,6 +42,12 @@ const getAudioBuffer = async (response: ReadableStream) => {
     )
 
     return Buffer.from(dataArray.buffer);
+}
+
+// Function to convert a ReadableStream<Uint8Array> to a Node.js Readable stream
+async function getAudioReadable(readableStream: ReadableStream<Uint8Array>) {
+    const buffer = await getAudioBuffer(readableStream);
+    return Readable.from(buffer);
 }
 
 export { getAudio };
