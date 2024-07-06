@@ -15,11 +15,13 @@ export default {
     execute: async (interaction: ChatInputCommandInteraction, input: string) => {
         try {
             const query = interaction.options.getString("query") ?? "";
-            const user = interaction.user.username;
-
+            const user = interaction.user;
+            
+            if (interaction.user.bot) return;
+            
             const config = {
                 configurable: {
-                    sessionId: interaction.guildId || interaction.user.id,
+                    sessionId: interaction.guildId || user.id,
                 }
             }
 
@@ -27,7 +29,7 @@ export default {
             
             await withMessageHistory.invoke(
                 {
-                    username: user,
+                    username: user.username,
                     input: query,
                 },
                 config

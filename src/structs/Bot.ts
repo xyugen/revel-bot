@@ -60,6 +60,7 @@ export class Bot {
 
     private async onMessageCreate(message: Message): Promise<void> {
         if (message.mentions.users.has(this.client.user!.id)) {
+            if (message.author.bot) return;
             const config: {
                 configurable: {
                     sessionId: string | undefined;
