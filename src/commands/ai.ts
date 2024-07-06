@@ -24,16 +24,18 @@ export default {
             }
 
             interaction.deferReply();
-            const chatCompletion = await withMessageHistory.invoke(
+            
+            await withMessageHistory.invoke(
                 {
                     username: user,
                     input: query,
                 },
                 config
-            );
-            const chatContent = chatCompletion || "Sorry, I don't have an answer for that.";
+            ).then(async (chatCompletion) => {
+                const chatContent = chatCompletion || "Sorry, I don't have an answer for that.";
 
-            await interaction.editReply({ content: chatContent });
+                await interaction.editReply({ content: chatContent });
+            });
         } catch (error) {
             console.error(error);
             await interaction.editReply("An error occurred while processing your request.");
