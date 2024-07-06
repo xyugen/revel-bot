@@ -59,28 +59,31 @@ export class Bot {
     }
 
     private async onMessageCreate(message: Message): Promise<void> {
+        if (message.author.bot) return;
+        const sessionId = message.guildId ?? message.author.id;
+        
+        // If the message is a mention
         if (message.mentions.users.has(this.client.user!.id)) {
-            if (message.author.bot) return;
-            const config: {
-                configurable: {
-                    sessionId: string | undefined;
-                }
-            } = {
-                configurable: {
-                    sessionId: message.guildId ?? message.author.id,
-                }
-            }
-            
             const chatCompletion = await withMessageHistory.invoke(
-                {
-                    username: message.author.username,
-                    input: message.content,
-                },
-                config
+                { username: message.author.username, input: message.content },
+                { configurable: { sessionId } }
             );
 
             message.reply(chatCompletion).catch(console.error);
+            return;
         }
+
+        // If the message is a reply
+        if (!message.reference) return;
+
+        const originalMessage = await message.channel.messages.fetch(message.reference.messageId!).catch(() => null);
+        if (!originalMessage || originalMessage.author.id !== this.client.user!.id) return;
+        const chatCompletionForReply = await withMessageHistory.invoke(
+            { username: message.author.username, input: originalMessage.content },
+            { configurable: { sessionId } }
+        );
+
+        message.reply("Reply: " + chatCompletionForReply).catch(console.error);
     }
 
     private async onInteractionCreate() {
