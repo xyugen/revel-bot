@@ -7,7 +7,7 @@ import { StringOutputParser } from "@langchain/core/output_parsers";
 
 const model = new ChatGroq({
     apiKey: config.GROQ_API_KEY,
-    model: "llama3-8b-8192",
+    model: "gemma2-9b-it",
     temperature: 0.6,
     maxTokens: 1000,
 });
