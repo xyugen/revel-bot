@@ -11,13 +11,14 @@ export default {
         .addChannelOption(option => option
             .setName("text-channel")
             .setDescription("The text channel to convert the message in")
-            .setRequired(true)
+            .setRequired(false)
         ),
         // Voice permissions
     permissions: [PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.Speak],
     cooldown: 3,
     async execute(interaction: ChatInputCommandInteraction, input: string) {
-        const channel = interaction.options.getChannel("text-channel", true);
+        const channel = interaction.options.getChannel("text-channel", false) || interaction.channel;
+
         const guildMember = interaction.guild!.members.cache.get(interaction.user.id);
         const { channel: voiceChannel } = guildMember!.voice;
 
