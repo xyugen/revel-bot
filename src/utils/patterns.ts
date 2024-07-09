@@ -1,4 +1,5 @@
 export const videoPattern = /^(https?:\/\/)?(www\.)?(m\.|music\.)?(youtube\.com|youtu\.?be)\/.+$/;
+export const igPattern = /^https:\/\/www\.instagram\.com\/(p|reel|tv|[-a-zA-Z0-9._]+)\/([a-zA-Z0-9_-]+)\/?(\?.*)?$/;
 export const playlistPattern = /^.*(list=)([^#\&\?]*).*/;
 export const scRegex = /^https?:\/\/(soundcloud\.com)\/(.*)$/;
 export const mobileScRegex = /^https?:\/\/(soundcloud\.app\.goo\.gl)\/(.*)$/;

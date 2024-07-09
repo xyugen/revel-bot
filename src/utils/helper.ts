@@ -1,3 +1,5 @@
+import { User } from "discord.js";
+
 /**
  * Converts seconds to a readable format
  *
@@ -27,4 +29,8 @@ export async function fetchImageBuffer(url: string): Promise<Buffer> {
     if (!response.ok) throw new Error("Failed to fetch image");
     const arrayBuffer = await response.arrayBuffer();
     return Buffer.from(arrayBuffer);
+}
+
+export const replaceIdToName = (text: string, user: User) => {
+    return text.replace(`<@${user.id}>`, user.displayName) || user.username;
 }

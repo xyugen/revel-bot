@@ -1,7 +1,15 @@
 import axios from "axios";
 import config from "../utils/config";
 
-const shortenUrl = async (url: string): Promise<string> => {
+/**
+ * Shortens a given URL using the RapidAPI URL Shortener service.
+ *
+ * @param {string} url - The URL to be shortened.
+ * @param {number} [duration=7] - The duration (in days) for which the shortened URL should be valid.
+ * @return {Promise<string>} A Promise that resolves to the shortened URL.
+ * @throws {Error} If there is an error in shortening the URL.
+ */
+const shortenUrl = async (url: string, duration: number = 7): Promise<string> => {
     const options = {
         method: 'POST',
         url: 'https://url-shortener42.p.rapidapi.com/shorten/',
@@ -13,7 +21,7 @@ const shortenUrl = async (url: string): Promise<string> => {
         },
         data: {
             url: url,
-            validity_duration: 7
+            validity_duration: duration
         }
     }
 
